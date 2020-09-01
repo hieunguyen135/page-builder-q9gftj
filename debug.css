@@ -1,0 +1,27 @@
+.o-layout__create--top,
+.o-layout__create--right,
+.o-layout__create--bottom,
+.o-layout__create--left,
+.o-layout__create--center {
+  background-color: rgba(255, 0, 0, .2);
+}
+
+.o-layout__create--bottom:not(.is-over),
+.o-layout__create--right:not(.is-over),
+.o-layout__create--top:not(.is-over),
+.o-layout__create--center:not(.is-over),
+.o-layout__create--left:not(.is-over) {
+  opacity: 1;
+}
+
+.o-layout__create--top:after,
+.o-layout__create--center:after,
+.o-layout__create--bottom:after,
+.o-layout__create--left:after,
+.o-layout__create--right:after {
+  background-color: red;
+}
+
+.o-layout__block {
+  border: 1px dashed;
+}

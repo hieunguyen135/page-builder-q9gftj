@@ -1,0 +1,445 @@
+/* variables */
+:root {
+  --depth--1: 2;
+  --depth--2: 4;
+  --depth--3: 6;
+  --depth--4: 8;
+  --depth--5: 10;
+
+  --size--drop: calc(var(--size--drop-indicator) + var(--whitespace--drop-indicator) * 2);
+  --size--drop-section-inner: 3rem;
+  --size--drop-indicator: .5rem;
+  --size--drop-section: calc(var(--size--drop-section-inner) + var(--whitespace--drop-indicator) * 2);
+  --whitespace--drop-indicator: 1.25rem;
+}
+
+/* reset */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+html {
+  font-size: 12px;
+  line-height: 1.5;
+  font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  background-color: gainsboro;
+}
+
+h1,h2,h3,h4,h5,h6,p {
+  margin: 0;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* utility */
+.u-dashed-horizontal-separator {
+  width: 100%;
+  height: 0;
+  border-top: none;
+  border-bottom: 1px dashed lightgray;
+  margin: 0;
+}
+
+/* page-builder */
+.o-page-builder {
+  padding: 8rem;
+}
+
+.o-page-builder__page {
+  width: 80%;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* layout */
+.o-layout {
+  flex-grow: 1;
+  display: flex;
+  flex-wrap: nowrap;
+  width: 100%;
+}
+
+.o-layout--parent {
+  flex-direction: column;
+}
+
+.o-layout--parent,
+.o-layout--children {
+  position: relative;
+}
+
+.o-layout--children {
+  background-color: white;  
+}
+
+.o-layout--horizontal {
+  flex-direction: column;
+  align-items: flex-start;  
+}
+
+.o-layout--vertical {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* actions */
+.o-layout__actions {
+  position: absolute;
+  top:0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  z-index: var(--depth--3);
+  align-items: flex-start;
+  justify-content: flex-end;
+  display: flex;
+}
+
+.is-dragging .o-layout__actions {
+  display: none;
+}
+
+.o-layout__actions:hover .o-layout__buttons {
+  display: flex;
+}
+
+.o-layout__buttons {
+  background-color: black;
+  height: 3rem;
+  line-height: 1;
+  display: none;
+}
+
+.o-layout__buttons > button {
+  width: 3rem;
+  height: 100%;
+  outline: none;
+  border: none;
+  color: white;
+  text-transform: uppercase;  
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.o-layout__buttons > button:last-child {
+  background-color: red;
+}
+
+.o-layout__block {
+  width: 100%;
+  max-width: 100%;
+  user-select: none;
+  cursor: pointer;
+}
+
+.o-layout__block:hover {
+  background-color: gainsboro;
+}
+
+/* drop */
+.o-layout__create--top,
+
+.o-layout__create--bottom,
+
+.o-layout__create--center {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: var(--depth--2);
+}
+
+.o-layout__create--left,
+.o-layout__create--right {
+  z-index: var(--depth--3);
+}
+
+.o-layout__create--bottom:not(.is-over),
+.o-layout__create--right:not(.is-over),
+.o-layout__create--top:not(.is-over),
+.o-layout__create--center:not(.is-over),
+.o-layout__create--left:not(.is-over) {
+  opacity: 0;
+}
+
+.is-dragging .o-layout__create--bottom:not(.is-over),
+.is-dragging .o-layout__create--right:not(.is-over),
+.is-dragging .o-layout__create--top:not(.is-over),
+.is-dragging .o-layout__create--center:not(.is-over),
+.is-dragging .o-layout__create--left:not(.is-over) {
+  animation: pulse 5s 1;
+}
+
+@keyframes pulse {
+  from {
+    opacity: .2;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.o-layout__create--top:after,
+.o-layout__create--center:after,
+.o-layout__create--bottom:after,
+.o-layout__create--left:after,
+.o-layout__create--right:after {
+  content: '';
+  display: block;
+  background-color: black;
+  position: absolute;
+  border-radius: var(--size--drop-indicator);
+}
+
+.o-layout__create--center:after,
+.o-layout__create--left:after {
+  top: var(--whitespace--drop-indicator);
+  left: var(--whitespace--drop-indicator);
+  width: var(--size--drop-indicator);
+  height: calc(100% - var(--whitespace--drop-indicator) * 2);
+}
+
+.o-layout__create--right:after {
+  top: var(--whitespace--drop-indicator);
+  right: var(--whitespace--drop-indicator);
+  width: var(--size--drop-indicator);
+  height: calc(100% - var(--whitespace--drop-indicator) * 2);
+}
+
+.o-layout__create--top:after {
+  top: var(--whitespace--drop-indicator);
+  left: var(--whitespace--drop-indicator);
+  width: calc(100% - var(--whitespace--drop-indicator) * 2);
+  height: var(--size--drop-indicator);
+}
+
+.o-layout__create--bottom:after {
+  bottom: var(--whitespace--drop-indicator);
+  left: var(--whitespace--drop-indicator);
+  width: calc(100% - var(--whitespace--drop-indicator) * 2);
+  height: var(--size--drop-indicator);
+}
+
+.o-layout__create--top,
+.o-layout__create--bottom {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: var(--size--drop);
+}
+
+.o-layout__create--top {
+  top: calc(var(--size--drop) / -2);
+}
+
+.o-layout__create--bottom {
+  bottom: 0;
+  display: none;
+}
+
+.o-layout__create--center {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: var(--size--drop);
+}
+
+.o-layout__create--center {
+  left: calc(var(--size--drop) / -2);
+}
+
+.o-layout__create--left,
+.o-layout__create--right {
+  position: absolute;
+  top: var(--size--drop-section);
+  height: calc(100% - var(--size--drop-section));
+  width: var(--size--drop);
+}
+
+.o-layout--parent.is-root:last-child > .o-layout__create--left,
+.o-layout--parent.is-root:last-child > .o-layout__create--right {
+  height: calc(100% - var(--size--drop-section) * 2);
+}
+
+.o-layout__create--left {
+  left: calc(var(--size--drop) / -2);
+}
+
+.o-layout__create--right {
+  right: calc(var(--size--drop) / -2);
+}
+
+.o-layout--children > .o-layout--parent:last-child > .o-layout__create--bottom {
+  display: block;
+  bottom: calc(var(--size--drop) / -2);
+}
+
+.o-layout--parent.is-root > .o-layout--children > .o-layout--parent:first-child > .o-layout__create--center {
+  display: none;
+}
+
+/* drop sections */
+.o-layout__create--section-bottom {
+  display: none;
+}
+
+.o-layout__create--section-top,
+.is-root:last-child .o-layout__create--section-bottom {
+  display: flex;
+}
+
+.o-layout__create--section-top,
+.o-layout__create--section-bottom {
+  position: relative;
+  text-align: center;
+  user-select: none;
+  justify-content: center;
+  padding: var(--whitespace--drop-indicator);
+}
+
+.o-layout__create--section-top:after {
+  content: '';
+  display: block;
+  height: 2.75rem;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: white;
+  z-index: var(--depth--1);
+  border-top: 1px dashed;
+}
+
+.o-layout__create--section-bottom:after {
+  content: '';
+  display: block;
+  height: 2.75rem;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: white;
+  z-index: var(--depth--1);
+  border-bottom: 1px dashed;
+
+}
+
+.o-layout--parent.is-root:not(:first-child) .o-layout__create--section-top {
+  background-color: white;
+}
+
+.o-layout__create--section-top > div,
+.o-layout__create--section-bottom > div {
+  width: var(--size--drop-section-inner);
+  height: var(--size--drop-section-inner);
+  background-color: black;
+  border-radius: 100%;
+  cursor: pointer;
+  z-index: var(--depth--2);
+  font-size: 0;
+}
+
+.o-layout__create--section-top.is-over,
+.o-layout__create--section-bottom.is-over {
+  background-color: white;
+}
+
+.o-layout__create--section-top.is-over > div,
+.o-layout__create--section-bottom.is-over > div {
+  --size--drop-section-inner: 10rem;
+  width: 100%;
+  height: var(--size--drop-section-inner);
+  line-height: var(--size--drop-section-inner);
+  text-align: center;
+  border-radius: 0;
+  font-size: 1rem;
+  background-color: transparent;
+  border: 1px dashed;
+}
+
+.o-layout__create--section-top.is-over:after,
+.o-layout__create--section-bottom.is-over:after {
+  display: none;
+}
+
+/* blocks */
+.o-blocks {
+  width: 8rem;
+  position: fixed;
+  left: 0;
+  height: 100%;
+  background-color: white;
+  z-index: var(--depth--4);
+  border-right: 1px solid lightgray;
+}
+
+.o-block {
+  width: 6rem;
+  height: 6rem;
+  border: 1px solid lightgray;
+  margin: 1rem;
+}
+
+.o-block.is-dragging {
+  border-style: dashed;
+}
+
+/* media query */
+@media (min-width: 960px) {
+  .o-layout--horizontal {
+    flex-direction: row;
+  }
+}
+
+/* components */
+.o-title {
+  display: block;
+  padding: 1rem 4rem;
+  font-size: 3rem;
+  line-height: 1;
+  font-weight: 300;
+}
+
+.o-description {
+  display: block;
+  padding: 1rem 4rem;
+  font-size: 1rem;
+  color: gray;
+}
+
+.o-gallery {
+  max-width: 100%;
+  padding-top: calc((9 / 16) * 100%);
+  height: 0;
+  background-image: url(https://orig00.deviantart.net/900f/f/2012/228/e/7/ouroboros_original_by_griffinbing-d5bb16i.jpg);
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.o-gallery button {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 100%;
+  background-color: white;
+  border: 2px solid black;
+  outline: none;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate3d(-50%, 50%, 0);
+  cursor: row-resize;
+  z-index: var(--depth--5);
+}
+
+.o-spacer {
+  height: 3rem;
+}
